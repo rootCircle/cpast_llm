@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cpast-llm"
+version = "0.1.0"
+description = "LLM for cpast lib written in Rust to generate clex language from human readable input format and constarints"
+authors = ["Lab Rat <dev.frolics@gmail.com>"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain-google-genai = "^0.0.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
