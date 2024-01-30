@@ -1,3 +1,7 @@
+# langchain related stuffs
+.env
+.langchain.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
