@@ -5,7 +5,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+import cpast_lib
 
 load_dotenv()
 app = FastAPI()
@@ -32,12 +32,22 @@ class Request(BaseModel):
     real_constraints: str
 
 
+class CpastLibResponse(BaseModel):
+    Ok: str | None = None
+    Err: str | None = None
+
+
+class Response(BaseModel):
+    clex_lang: str
+    generated_response: CpastLibResponse
+
+
 @app.post("/api/llm/generate")
-async def generate(request: Request):
+async def generate(request: Request) -> Response:
     return generate_response(request.real_input_format, request.real_constraints)
 
 
-def generate_response(real_input_format: str, real_constraints: str) -> dict:
+def generate_response(real_input_format: str, real_constraints: str) -> Response:
     chat_model = chat.ClexChatModel(GOOGLE_API_KEY, "./.langchain.db")
     prompt_content = prompt.ClexPromptGenerator()
     lang_specs = prompt_content.get_lang_specs(path="./clex.spec.md")
@@ -65,6 +75,15 @@ def generate_response(real_input_format: str, real_constraints: str) -> dict:
     response = chat_model.call_model(
         prompt_content.get_dynamic_prompt(), input=formatted_prompt_input)
 
-    return {"response": response}
+    generated_testcases: dict = cpast_lib.generate(response)
+
+    return Response(
+        clex_lang=response,
+        generated_response=CpastLibResponse(
+            Ok=generated_testcases.get("Ok"),
+            Err=generated_testcases.get("Err")
+        )
+    )
+
 
 

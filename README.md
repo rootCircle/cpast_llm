@@ -8,13 +8,29 @@ Create a `.env` containing the gemini api key.
 
 ```bash
 poetry install
-poetry run maiturin develop
+poetry run maturin develop
 ```
 
 ## Run
 
 ```bash
 poetry run python3 main.py
+```
+
+## Help!
+
+Go to `{base url}/docs` for help!
+
+Example usage
+```bash
+curl -X 'POST' \
+  'http://0.0.0.0:8000/api/llm/generate' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "real_input_format": "string",
+  "real_constraints": "string"
+}'
 ```
 
 ## Resources (Good to read)
