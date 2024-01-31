@@ -1,3 +1,6 @@
+# Rust
+target/
+
 # langchain related stuffs
 .env
 .langchain.db

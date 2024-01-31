@@ -1,3 +1,13 @@
+[project]
+name = "cpast_llm"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+
 [tool.poetry]
 name = "cpast-llm"
 version = "0.1.0"
@@ -14,7 +24,16 @@ langchain = "^0.1.4"
 fastapi = "^0.109.0"
 uvicorn = "^0.27.0.post1"
 
+#[build-system]
+#requires = ["poetry-core"]
+#build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+maturin = "^1.4.0"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]

@@ -51,7 +51,7 @@ class ClexPromptGenerator:
                 "generated_language": "(N[1,5]) (?:N[1,100000]){\\1}"
             },
             {
-                "input_format": "The first line of input will contain a single integer TT, denoting the number of test cases.\nEach test case consists of two space-separated integers NN and MM — the number of students wants to go and the total number of tickets available, respectively.",
+                "input_format": "The first line of input will contain a single integer T, denoting the number of test cases.\nEach test case consists of two space-separated integers N and M — the number of students wants to go and the total number of tickets available, respectively.",
                 "constraints": "1≤T≤1000\n1≤N,M≤10^5",
                 "generated_language": "(N[1,1000]) (?:N[1,100000] N[1,100000]){\\1}"
             },

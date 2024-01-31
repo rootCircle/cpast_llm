@@ -1,9 +1,23 @@
-# To run 
+# clex LLM for cpast
+
+A W.I.P. implementation for LLM for clex, aimed to generate [clex](https://github.com/rootCircle/cpast/blob/main/clex.specs.md) from Human readable _Input Format_ and _Constraints_.
+
+## Install & setup
+
 Create a `.env` containing the gemini api key.
+
+```bash
+poetry install
+poetry run maiturin develop
+```
+
+## Run
+
 ```bash
 poetry run python3 main.py
 ```
 
+## Resources (Good to read)
 
 https://arxiv.org/abs/2305.19234
 
