@@ -11,12 +11,13 @@ class ClexChatModel:
         self.model = self.__initialise_model(google_api_key, model)
 
     def __initialise_model(self, google_api_key: str, model: str):
-        return ChatGoogleGenerativeAI(model="gemini-pro",
-                                      google_api_key=google_api_key,
-                                      convert_system_message_to_human=True)
+        return ChatGoogleGenerativeAI(
+            model="gemini-pro",
+            google_api_key=google_api_key,
+            convert_system_message_to_human=True,
+        )
 
     def call_model(self, prompt, input: dict = {}) -> str:
         chain = prompt | self.model
         result = chain.invoke(input=input)
         return result.content
-

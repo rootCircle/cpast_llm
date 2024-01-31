@@ -1,7 +1,7 @@
 from langchain.prompts import (
     ChatPromptTemplate,
     FewShotChatMessagePromptTemplate,
-    PromptTemplate
+    PromptTemplate,
 )
 
 
@@ -36,7 +36,10 @@ class ClexPromptGenerator:
             [
                 ("system", self.__get_prompt_template()),
                 few_shot_prompt,
-                ("human", "Input Format : {real_input_format}\nConstraints : {real_constraints}"),
+                (
+                    "human",
+                    "Input Format : {real_input_format}\nConstraints : {real_constraints}",
+                ),
             ]
         )
 
@@ -48,12 +51,12 @@ class ClexPromptGenerator:
             {
                 "input_format": "The first line contains an integer T, the number of test cases. Then T test cases follow. Each test case contains an integer p. ",
                 "constraints": " 1 ≤ T ≤ 5\n1 ≤ p ≤ 100000 (105)\nThere exists combinations of menus whose total price is exactly p.",
-                "generated_language": "(N[1,5]) (?:N[1,100000]){\\1}"
+                "generated_language": "(N[1,5]) (?:N[1,100000]){\\1}",
             },
             {
                 "input_format": "The first line of input will contain a single integer T, denoting the number of test cases.\nEach test case consists of two space-separated integers N and M — the number of students wants to go and the total number of tickets available, respectively.",
                 "constraints": "1≤T≤1000\n1≤N,M≤10^5",
-                "generated_language": "(N[1,1000]) (?:N[1,100000] N[1,100000]){\\1}"
+                "generated_language": "(N[1,1000]) (?:N[1,100000] N[1,100000]){\\1}",
             },
         ]
 
@@ -70,5 +73,3 @@ class ClexPromptGenerator:
         Here is the specifications of the language
         {lang_specs}
         """
-
-

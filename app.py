@@ -69,21 +69,18 @@ def generate_response(real_input_format: str, real_constraints: str) -> Response
     formatted_prompt_input = {
         "real_input_format": real_input_format,
         "real_constraints": real_constraints,
-        "lang_specs": lang_specs
+        "lang_specs": lang_specs,
     }
 
     response = chat_model.call_model(
-        prompt_content.get_dynamic_prompt(), input=formatted_prompt_input)
+        prompt_content.get_dynamic_prompt(), input=formatted_prompt_input
+    )
 
     generated_testcases: dict = cpast_lib.generate(response)
 
     return Response(
         clex_lang=response,
         generated_response=CpastLibResponse(
-            Ok=generated_testcases.get("Ok"),
-            Err=generated_testcases.get("Err")
-        )
+            Ok=generated_testcases.get("Ok"), Err=generated_testcases.get("Err")
+        ),
     )
-
-
-

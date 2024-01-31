@@ -1,6 +1,6 @@
+use cpast::generator;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use cpast::generator;
 use pyo3::Python;
 
 #[pyfunction]
@@ -9,9 +9,9 @@ fn generate(py: Python<'_>, lang: String) -> PyResult<&PyDict> {
     let response = PyDict::new(py);
     match generated_lang {
         Err(err) => response.set_item("Err", err.get_msg()),
-        Ok(lang) => response.set_item("Ok", lang) 
+        Ok(lang) => response.set_item("Ok", lang),
     }?;
-    
+
     Ok(response)
 }
 
