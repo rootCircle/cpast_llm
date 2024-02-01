@@ -27,9 +27,15 @@ uvicorn = "^0.27.0.post1"
 #[build-system]
 #requires = ["poetry-core"]
 #build-backend = "poetry.core.masonry.api"
+requests = "^2.31.0"
+requests-cache = "^1.1.1"
+pylatexenc = "^2.10"
+bs4 = "^0.0.2"
+html5lib = "^1.1"
 
 [tool.poetry.group.dev.dependencies]
 maturin = "^1.4.0"
+pytest = "^8.0.0"
 
 [build-system]
 requires = ["maturin>=1.4,<2.0"]

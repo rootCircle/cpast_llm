@@ -5,6 +5,9 @@ target/
 .env
 .langchain.db
 
+# requests caching related
+scrapper_cache.sqlite
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

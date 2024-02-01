@@ -1,5 +1,8 @@
 import cpast_llm.prompt as prompt
 import cpast_llm.chat as chat
+import cpast_scrapper.codeforces as codeforces
+import cpast_scrapper.codechef as codechef
+import cpast_scrapper.constant
 from dotenv import load_dotenv
 import os
 from fastapi import FastAPI
@@ -45,6 +48,20 @@ class Response(BaseModel):
 @app.post("/api/llm/generate")
 async def generate(request: Request) -> Response:
     return generate_response(request.real_input_format, request.real_constraints)
+
+
+@app.get("/api/code/codechef/{problem_code}")
+async def get_codechef_problem(
+    problem_code: str,
+) -> cpast_scrapper.constant.ScrapeAPIResponse:
+    return codechef.CodeChef.get_problems_by_code(problem_code)
+
+
+@app.get("/api/code/codeforces/{contest_id}/{problem_code}")
+async def get_codeforces_problem(
+    contest_id: str, problem_code: str
+) -> cpast_scrapper.constant.ScrapeAPIResponse:
+    return codeforces.CodeForces.get_problems_by_code(contest_id, problem_code)
 
 
 def generate_response(real_input_format: str, real_constraints: str) -> Response:
