@@ -4,17 +4,16 @@ A W.I.P. implementation for LLM for clex, aimed to generate [clex](https://githu
 
 ## Install & setup
 
-Create a `.env` containing the gemini api key.
+Create a `.env` containing the gemini api key. Make sure you have `poetry` installed on your local system.
 
 ```bash
-poetry install
-poetry run maturin develop
+make init
 ```
 
 ## Run
 
 ```bash
-poetry run python3 main.py
+make run
 ```
 
 ## Help!

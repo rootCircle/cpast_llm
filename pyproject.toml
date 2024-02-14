@@ -23,10 +23,6 @@ python-dotenv = "^1.0.1"
 langchain = "^0.1.4"
 fastapi = "^0.109.0"
 uvicorn = "^0.27.0.post1"
-
-#[build-system]
-#requires = ["poetry-core"]
-#build-backend = "poetry.core.masonry.api"
 requests = "^2.31.0"
 requests-cache = "^1.1.1"
 pylatexenc = "^2.10"
@@ -36,6 +32,8 @@ html5lib = "^1.1"
 [tool.poetry.group.dev.dependencies]
 maturin = "^1.4.0"
 pytest = "^8.0.0"
+ruff = "^0.2.1"
+pyright = "^1.1.350"
 
 [build-system]
 requires = ["maturin>=1.4,<2.0"]
@@ -43,3 +41,35 @@ build-backend = "maturin"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
+
+[tool.ruff.lint]
+# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
+select = ["E4", "E7", "E9", "F", "B"]
+
+# 2. Avoid enforcing line-length violations (`E501`)
+ignore = ["E501"]
+
+# 3. Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+# 4. Ignore `E402` (import violations) in all `__init__.py` files, and in select subdirectories.
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs,tools}/*" = ["E402"]
+
+[tool.ruff.format]
+# 5. Use single quotes for non-triple-quoted strings.
+quote-style = "single"
+
+[tool.pyright]
+include = ["cpast_llm", "cpast_scrapper", "main.py", "app.py", "tests", "scrape.py"]
+exclude = ["**/__pycache__",
+    "**/__init__.py"
+]
+defineConstant = { DEBUG = true }
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.10"
+pythonPlatform = "Linux"

@@ -5,7 +5,7 @@ from pylatexenc.latex2text import LatexNodes2Text
 from bs4 import BeautifulSoup
 
 requests_cache.install_cache(
-    cache_name="scrapper_cache", backend="sqlite", expire_after=18000
+    cache_name='scrapper_cache', backend='sqlite', expire_after=18000
 )
 
 
@@ -14,7 +14,7 @@ class CodeForces(BaseException):
         pass
 
     def get_problems_by_code(
-        contest_id: str, code: str
+        self, contest_id: str, code: str
     ) -> cpast_scrapper.constant.ScrapeAPIResponse:
         response = requests.get(
             cpast_scrapper.constant.CODEFORCES_PREFIX.format(
@@ -23,29 +23,41 @@ class CodeForces(BaseException):
             timeout=2.50,
         )
         if response.status_code == 200:
-            response_soap = BeautifulSoup(response.content, "html5lib")
+            response_soap = BeautifulSoup(response.content, 'html5lib')
 
-            problem_components = response_soap.find(
-                "div", {"class": "problem-statement"}
-            )
+            problem_components = response_soap.find('div', class_='problem-statement')  # pyright: ignore[reportCallIssue]
+
+            if problem_components is None:
+                raise CodeForcesError(
+                    "Can't get the problem statement from the website"
+                )
 
             try:
-                input_format = LatexNodes2Text().latex_to_text(
-                    problem_components.find(
-                        "div", {"class": "input-specification"}
-                    ).text.replace("$$$", "")
+                input_spec_dom = problem_components.find(
+                    'div',
+                    class_='input-specification',  # pyright: ignore[reportCallIssue]
                 )
-                statement = LatexNodes2Text().latex_to_text(
-                    problem_components.find("div", {"class": ""}).text.replace(
-                        "$$$", ""
+                if input_spec_dom is not None:
+                    input_format = LatexNodes2Text().latex_to_text(
+                        input_spec_dom.text.replace('$$$', '')
                     )
-                )
-                constraints = ""
+                else:
+                    input_format = ''
 
-            except Exception:
+                statement_dom = problem_components.find('div', class_='')  # pyright: ignore[reportCallIssue]
+                if statement_dom is not None:
+                    statement = LatexNodes2Text().latex_to_text(
+                        statement_dom.text.replace('$$$', '')
+                    )
+                else:
+                    statement = ''
+
+                constraints = ''
+
+            except Exception as err:
                 raise CodeForcesError(
                     "Can't extract Input Format and Problem Statements for the given question"
-                )
+                ) from err
 
             return cpast_scrapper.constant.ScrapeAPIResponse(
                 input_format=input_format,
@@ -53,7 +65,7 @@ class CodeForces(BaseException):
                 statement=statement,
             )
         else:
-            raise CodeForcesError("Network Issue")
+            raise CodeForcesError('Network Issue')
 
 
 class CodeForcesError(Exception):
