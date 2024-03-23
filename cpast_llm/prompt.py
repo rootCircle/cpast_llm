@@ -61,15 +61,17 @@ class ClexPromptGenerator:
         ]
 
     def __get_prompt_template(self) -> str:
-        return """You are an expert at MAKING PROMPTS FOR LLMs for certain tasks.
-        You are assigned with making a prompt for generating a language, based on set of certain rules.
+        return """You are an expert programmer, and you need to write a program for the given natural language query.
+        First, you should write grammar rules by choosing from the following BNF rules. Then, you should write programs that conform to your predicted rules.
         The RULES MUST BE FOLLOWED AT ANY COST.
 
-        1. If you're unclear about the specifications, then you WON'T GENERATE the prompt, but you will ask me list of questions you have doubt with.
-        2. I will be providing you with the specifications of the language at the bottom, along with semantic meaning of some metacharacters used in the language and examples, if something feels incomplete please let me know.
-        3. The purpose of this prompt would be that user will give input format for a program in human language and with the help of the prompt we should be able to convert it to the current language given, based on specifications.
-        4. NEVER VIOLATE GRAMMAR RULES OF THE language
+        1. The purpose of this prompt would be that user will give input format for a program in human language and with the help of the prompt we should be able to convert it to the current language given, based on specifications.
+        2. NEVER VIOLATE GRAMMAR RULES OF THE language
 
-        Here is the specifications of the language
+        Here is the BNF Grammar & specifications of the language
+        [BEGIN RULES]
+
         {lang_specs}
+
+        [END RULES]
         """
