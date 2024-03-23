@@ -1,5 +1,5 @@
-import cpast_llm.prompt as prompt
-import cpast_llm.chat as chat
+import cpast_prompt.prompt as prompt
+import cpast_prompt.chat as chat
 import cpast_scrapper.codeforces as codeforces
 import cpast_scrapper.codechef as codechef
 import cpast_scrapper.constant

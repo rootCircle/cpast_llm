@@ -15,10 +15,14 @@ class CodeChef(BaseException):
     def get_problems_by_code(
         self, code: str
     ) -> cpast_scrapper.constant.ScrapeAPIResponse:
-        response = requests.get(
-            cpast_scrapper.constant.CODECHEF_PREFIX.format(problem_code=code),
-            timeout=2.50,
-        )
+        try:
+            response = requests.get(
+                cpast_scrapper.constant.CODECHEF_PREFIX.format(problem_code=code),
+                timeout=2.50,
+            )
+        except requests.exceptions.ReadTimeout as err:
+            raise CodeChefError('Network Issue') from err
+
         if response.status_code == 200:
             response = response.json()
             problem_components: dict | None = response.get('problemComponents')

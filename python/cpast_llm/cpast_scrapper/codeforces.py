@@ -16,12 +16,15 @@ class CodeForces(BaseException):
     def get_problems_by_code(
         self, contest_id: str, code: str
     ) -> cpast_scrapper.constant.ScrapeAPIResponse:
-        response = requests.get(
-            cpast_scrapper.constant.CODEFORCES_PREFIX.format(
-                contest_id=contest_id, problem_code=code
-            ),
-            timeout=2.50,
-        )
+        try:
+            response = requests.get(
+                cpast_scrapper.constant.CODEFORCES_PREFIX.format(
+                    contest_id=contest_id, problem_code=code
+                ),
+                timeout=2.50,
+            )
+        except requests.exceptions.ReadTimeout as err:
+            raise CodeForcesError('Network Issue') from err
         if response.status_code == 200:
             response_soap = BeautifulSoup(response.content, 'html5lib')
 

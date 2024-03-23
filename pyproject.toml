@@ -1,6 +1,24 @@
 [project]
-name = "cpast_llm"
-requires-python = ">=3.8"
+name = "cpast-llm"
+version = "0.1.1"
+description = "LLM for cpast lib written in Rust to generate clex language from human readable input format and constraints"
+authors = [
+    { name = "Lab Rat", email = "dev.frolics@gmail.com" }
+]
+dependencies = [
+    "langchain-google-genai==0.0.6",
+    "python-dotenv>=1.0.1",
+    "langchain>=0.1.12",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "requests>=2.31.0",
+    "pylatexenc>=2.10",
+    "bs4>=0.0.2",
+    "html5lib>=1.1",
+    "requests-cache>=1.2.0",
+]
+readme = "README.md"
+requires-python = ">= 3.9"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -8,38 +26,23 @@ classifiers = [
 ]
 dynamic = ["version"]
 
-[tool.poetry]
-name = "cpast-llm"
-version = "0.1.0"
-description = "LLM for cpast lib written in Rust to generate clex language from human readable input format and constarints"
-authors = ["Lab Rat <dev.frolics@gmail.com>"]
-license = "GPL-3.0"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-langchain-google-genai = "^0.0.6"
-python-dotenv = "^1.0.1"
-langchain = "^0.1.4"
-fastapi = "^0.109.0"
-uvicorn = "^0.27.0.post1"
-requests = "^2.31.0"
-requests-cache = "^1.1.1"
-pylatexenc = "^2.10"
-bs4 = "^0.0.2"
-html5lib = "^1.1"
-
-[tool.poetry.group.dev.dependencies]
-maturin = "^1.4.0"
-pytest = "^8.0.0"
-ruff = "^0.2.1"
-pyright = "^1.1.350"
-
 [build-system]
-requires = ["maturin>=1.4,<2.0"]
+requires = ["maturin>=1.2,<2.0"]
 build-backend = "maturin"
 
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=8.1.1",
+    "ruff>=0.3.3",
+    "pyright>=1.1.354",
+    "maturin>=1.5.0",
+    "pip>=24.0",
+]
+
 [tool.maturin]
+python-source = "python"
+module-name = "cpast_llm.cpast_lib"
 features = ["pyo3/extension-module"]
 
 [tool.ruff.lint]
@@ -62,9 +65,13 @@ unfixable = ["B"]
 quote-style = "single"
 
 [tool.pyright]
-include = ["cpast_llm", "cpast_scrapper", "main.py", "app.py", "tests", "scrape.py"]
-exclude = ["**/__pycache__",
-    "**/__init__.py"
+executionEnvironments = [
+  { root = "python/cpast_llm"},
+]
+include = ["python/cpast_llm/cpast_scrapper", "python/cpast_llm/cpast_utils", "python/cpast_llm/cpast_prompt", "python/cpast_llm/main.py", "python/cpast_llm/app.py", "python/cpast_llm/scrape.py"]
+exclude = ["python/cpast_llm/**/__pycache__",
+  # "python/cpast_llm/**/__init__.py",
+  "python/cpast_llm/__pycache__"
 ]
 defineConstant = { DEBUG = true }
 

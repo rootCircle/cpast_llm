@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class LLMRequest(BaseModel):
@@ -16,8 +17,8 @@ class LLMRequest(BaseModel):
 
 
 class CpastLibResponse(BaseModel):
-    Ok: str | None = None
-    Err: str | None = None
+    Ok: Optional[str] = None
+    Err: Optional[str] = None
 
 
 class LLMResponse(BaseModel):

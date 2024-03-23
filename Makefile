@@ -1,19 +1,22 @@
 init:
-	poetry install # make sure poetry is installed
-	poetry run maturin develop
+	rye sync # make sure poetry is installed
+	rye run maturin develop
 
 lint:
-	poetry run ruff check .
-	poetry run pyright # static type checking
+	rye lint
+	rye run pyright # static type checking
+
+lint-fix:
+	rye lint --fix
 
 run:
-	poetry run maturin develop
-	poetry run python3 main.py
+	rye run maturin develop --skip-install --quiet
+	rye run python3 python/cpast_llm/main.py
 
 fmt:
-	poetry run ruff format
+	rye fmt
 
 test:
-	poetry run pytest
+	rye test
 
 precommit: lint fmt test

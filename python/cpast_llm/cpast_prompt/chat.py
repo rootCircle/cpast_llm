@@ -2,6 +2,7 @@ from langchain.globals import set_llm_cache
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.cache import SQLiteCache
 from langchain_core.pydantic_v1 import SecretStr
+from typing import Union, Optional
 
 
 class ClexChatModel:
@@ -13,7 +14,7 @@ class ClexChatModel:
         # Initialise gemini-pro for now
         self.model = self.__initialise_model(google_api_key, model)
 
-    def __initialise_model(self, google_api_key: SecretStr | None, model: str):
+    def __initialise_model(self, google_api_key: Union[SecretStr, None], model: str):
         return ChatGoogleGenerativeAI(
             model='gemini-pro',
             google_api_key=google_api_key,
@@ -23,7 +24,7 @@ class ClexChatModel:
             transport=None,
         )
 
-    def call_model(self, prompt, input: dict | None = None) -> str:
+    def call_model(self, prompt, input: Optional[dict] = None) -> str:
         if input is None:
             input = {}
         chain = prompt | self.model
