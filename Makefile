@@ -1,5 +1,5 @@
 init:
-	rye sync # make sure poetry is installed
+	rye sync # make sure rye is installed
 	rye run maturin develop
 
 lint:

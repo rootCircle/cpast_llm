@@ -4,7 +4,7 @@ A W.I.P. implementation for LLM for clex, aimed to generate [clex](https://githu
 
 ## Install & setup
 
-Create a `.env` containing the gemini api key. Make sure you have `poetry` installed on your local system.
+Create a `.env` containing the gemini api key. Make sure you have [rye](https://rye-up.com/guide/installation/) installed on your local system.
 
 ```bash
 make init
@@ -14,6 +14,11 @@ make init
 
 ```bash
 make run
+```
+or
+
+```bash
+rye run dev
 ```
 
 ## Help!
