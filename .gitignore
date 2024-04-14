@@ -4,7 +4,7 @@ target/
 # langchain related stuffs
 .env
 .langchain.db
-
+.clex.db
 # requests caching related
 scrapper_cache.sqlite
 

@@ -1,9 +1,11 @@
+from typing import Union
 import cpast_prompt.prompt as prompt
 import cpast_prompt.chat as chat
 import cpast_scrapper.codeforces as codeforces
 import cpast_scrapper.codechef as codechef
 import cpast_utils.models
 import cpast_utils.scrape_models
+import cpast_db.clex_cache as clex_cache
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -95,7 +97,10 @@ async def generate_testcase_codechef(
         codechef.CodeChef().get_problems_by_code(problem_code)
     )
     clex: str = generate_response(
-        scrape_response.input_format, scrape_response.constraints
+        scrape_response.input_format,
+        scrape_response.constraints,
+        'codechef',
+        problem_code,
     )
 
     generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
@@ -118,7 +123,10 @@ async def generate_testcase_codeforces(
         codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
     )
     clex: str = generate_response(
-        scrape_response.input_format, scrape_response.constraints
+        scrape_response.input_format,
+        scrape_response.constraints,
+        'codeforces',
+        '{}/{}'.format(contest_id, problem_code),
     )
 
     generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
@@ -133,7 +141,17 @@ async def generate_testcase_codeforces(
     )
 
 
-def generate_response(input_format: str, constraints: str) -> str:
+def generate_response(
+    input_format: str,
+    constraints: str,
+    platform: Union[str, None] = None,
+    question_identifier: Union[str, None] = None,
+) -> str:
+    if platform and question_identifier:
+        cached_clex = clex_cache.retrieve_cache(platform, question_identifier)
+        if cached_clex:
+            return cached_clex
+
     chat_model = chat.ClexChatModel(
         GOOGLE_API_KEY, cpast_utils.models.LANGCHAIN_LLM_CACHE_FILENAME
     )
@@ -146,8 +164,10 @@ def generate_response(input_format: str, constraints: str) -> str:
         'lang_specs': lang_specs,
     }
 
-    response = chat_model.call_model(
+    clex = chat_model.call_model(
         prompt_content.get_dynamic_prompt(), input=formatted_prompt_input
     )
+    if platform and question_identifier:
+        clex_cache.add_cache(platform, question_identifier, clex)
 
-    return response
+    return clex

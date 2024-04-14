@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 LANGCHAIN_LLM_CACHE_FILENAME: str = '.langchain.db'
+CLEX_CACHE_DB_FILENAME = '.clex.db'
 
 
 class LLMRequest(BaseModel):
