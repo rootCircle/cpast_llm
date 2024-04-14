@@ -32,8 +32,8 @@ curl -X 'POST' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "real_input_format": "string",
-  "real_constraints": "string"
+  "input_format": "string",
+  "constraints": "string"
 }'
 ```
 

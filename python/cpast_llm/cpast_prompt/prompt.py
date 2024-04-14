@@ -38,7 +38,7 @@ class ClexPromptGenerator:
                 few_shot_prompt,
                 (
                     'human',
-                    'Input Format : {real_input_format}\nConstraints : {real_constraints}',
+                    'Input Format : {input_format}\nConstraints : {constraints}',
                 ),
             ]
         )
