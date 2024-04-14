@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Optional
 
+LANGCHAIN_LLM_CACHE_FILENAME: str = '.langchain.db'
+
 
 class LLMRequest(BaseModel):
     input_format: str

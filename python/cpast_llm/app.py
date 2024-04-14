@@ -2,7 +2,8 @@ import cpast_prompt.prompt as prompt
 import cpast_prompt.chat as chat
 import cpast_scrapper.codeforces as codeforces
 import cpast_scrapper.codechef as codechef
-import cpast_scrapper.constant
+import cpast_utils.models
+import cpast_utils.scrape_models
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -75,22 +76,27 @@ async def testcase_generate(
 @app.get('/api/code/codechef/{problem_code}')
 async def get_codechef_problem(
     problem_code: str,
-) -> cpast_scrapper.constant.ScrapeAPIResponse:
+) -> cpast_utils.scrape_models.ScrapeAPIResponse:
     return codechef.CodeChef().get_problems_by_code(problem_code)
 
 
 @app.get('/api/code/codeforces/{contest_id}/{problem_code}')
 async def get_codeforces_problem(
     contest_id: str, problem_code: str
-) -> cpast_scrapper.constant.ScrapeAPIResponse:
+) -> cpast_utils.scrape_models.ScrapeAPIResponse:
     return codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
+
 
 @app.get('/api/testcases/codechef/{problem_code}')
 async def generate_testcase_codechef(
     problem_code: str,
 ) -> CModels.LLMResponse:
-    scrape_response: cpast_scrapper.constant.ScrapeAPIResponse = codechef.CodeChef().get_problems_by_code(problem_code)
-    clex: str = generate_response(scrape_response.input_format, scrape_response.constraints)
+    scrape_response: cpast_utils.scrape_models.ScrapeAPIResponse = (
+        codechef.CodeChef().get_problems_by_code(problem_code)
+    )
+    clex: str = generate_response(
+        scrape_response.input_format, scrape_response.constraints
+    )
 
     generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
         clex
@@ -103,12 +109,17 @@ async def generate_testcase_codechef(
         ),
     )
 
-@app.get('/api/testcases/codeforces/{problem_code}')
+
+@app.get('/api/testcases/codeforces/{contest_id}/{problem_code}')
 async def generate_testcase_codeforces(
     contest_id: str, problem_code: str
 ) -> CModels.LLMResponse:
-    scrape_response: cpast_scrapper.constant.ScrapeAPIResponse = codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
-    clex: str = generate_response(scrape_response.input_format, scrape_response.constraints)
+    scrape_response: cpast_utils.scrape_models.ScrapeAPIResponse = (
+        codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
+    )
+    clex: str = generate_response(
+        scrape_response.input_format, scrape_response.constraints
+    )
 
     generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
         clex
@@ -121,8 +132,11 @@ async def generate_testcase_codeforces(
         ),
     )
 
+
 def generate_response(input_format: str, constraints: str) -> str:
-    chat_model = chat.ClexChatModel(GOOGLE_API_KEY, './.langchain.db')
+    chat_model = chat.ClexChatModel(
+        GOOGLE_API_KEY, cpast_utils.models.LANGCHAIN_LLM_CACHE_FILENAME
+    )
     prompt_content = prompt.ClexPromptGenerator()
     lang_specs = prompt_content.get_lang_specs(path='./clex.spec.md')
 

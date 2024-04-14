@@ -6,6 +6,8 @@ CODECHEF_PREFIX = (
 )
 CODEFORCES_PREFIX = 'https://codeforces.com/contest/{contest_id}/problem/{problem_code}'
 
+SCRAPPER_CACHE_FILENAME = 'scrapper_cache'
+
 
 class ScrapeAPIResponse(BaseModel):
     input_format: str

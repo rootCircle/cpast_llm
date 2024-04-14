@@ -24,7 +24,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dynamic = ["version"]
 
 [tool.rye.scripts]
 dev = { cmd = "uvicorn cpast_llm.app:app --port 8000 --reload", env = { PYTHONPATH = "./python/cpast_llm"}}
@@ -39,7 +38,7 @@ managed = true
 dev-dependencies = [
     "pytest>=8.1.1",
     "ruff>=0.3.3",
-    "pyright>=1.1.354",
+    "pyright>=1.1.358",
     "maturin>=1.5.0",
     "pip>=24.0",
 ]
