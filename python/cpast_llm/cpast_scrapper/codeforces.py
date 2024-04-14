@@ -1,11 +1,11 @@
-import cpast_utils.scrape_models
+import cpast_llm.cpast_utils.scrape_models
 import requests
 import requests_cache
 from pylatexenc.latex2text import LatexNodes2Text
 from bs4 import BeautifulSoup
 
 requests_cache.install_cache(
-    cache_name=cpast_utils.scrape_models.SCRAPPER_CACHE_FILENAME,
+    cache_name=cpast_llm.cpast_utils.scrape_models.SCRAPPER_CACHE_FILENAME,
     backend='sqlite',
     expire_after=18000,
 )
@@ -17,10 +17,10 @@ class CodeForces(BaseException):
 
     def get_problems_by_code(
         self, contest_id: str, code: str
-    ) -> cpast_utils.scrape_models.ScrapeAPIResponse:
+    ) -> cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse:
         try:
             response = requests.get(
-                cpast_utils.scrape_models.CODEFORCES_PREFIX.format(
+                cpast_llm.cpast_utils.scrape_models.CODEFORCES_PREFIX.format(
                     contest_id=contest_id, problem_code=code
                 ),
                 timeout=2.50,
@@ -64,7 +64,7 @@ class CodeForces(BaseException):
                     "Can't extract Input Format and Problem Statements for the given question"
                 ) from err
 
-            return cpast_utils.scrape_models.ScrapeAPIResponse(
+            return cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse(
                 input_format=input_format,
                 constraints=constraints,
                 statement=statement,

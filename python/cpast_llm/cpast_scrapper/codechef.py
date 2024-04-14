@@ -1,10 +1,10 @@
-import cpast_utils.scrape_models
+import cpast_llm.cpast_utils.scrape_models
 import requests
 import requests_cache
 from pylatexenc.latex2text import LatexNodes2Text
 
 requests_cache.install_cache(
-    cache_name=cpast_utils.scrape_models.SCRAPPER_CACHE_FILENAME,
+    cache_name=cpast_llm.cpast_utils.scrape_models.SCRAPPER_CACHE_FILENAME,
     backend='sqlite',
     expire_after=18000,
 )
@@ -16,10 +16,12 @@ class CodeChef(BaseException):
 
     def get_problems_by_code(
         self, code: str
-    ) -> cpast_utils.scrape_models.ScrapeAPIResponse:
+    ) -> cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse:
         try:
             response = requests.get(
-                cpast_utils.scrape_models.CODECHEF_PREFIX.format(problem_code=code),
+                cpast_llm.cpast_utils.scrape_models.CODECHEF_PREFIX.format(
+                    problem_code=code
+                ),
                 timeout=2.50,
             )
         except requests.exceptions.ReadTimeout as err:
@@ -41,7 +43,7 @@ class CodeChef(BaseException):
                 problem_components.get('statement')
             )
 
-            return cpast_utils.scrape_models.ScrapeAPIResponse(
+            return cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse(
                 input_format=input_format,
                 constraints=constraints,
                 statement=statement,

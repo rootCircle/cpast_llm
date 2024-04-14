@@ -1,23 +1,23 @@
 from typing import Union
-import cpast_prompt.prompt as prompt
-import cpast_prompt.chat as chat
-import cpast_scrapper.codeforces as codeforces
-import cpast_scrapper.codechef as codechef
-import cpast_utils.models
-import cpast_utils.scrape_models
-import cpast_db.clex_cache as clex_cache
+import cpast_llm.cpast_prompt.prompt as prompt
+import cpast_llm.cpast_prompt.chat as chat
+import cpast_llm.cpast_scrapper.codeforces as codeforces
+import cpast_llm.cpast_scrapper.codechef as codechef
+import cpast_llm.cpast_utils.models
+import cpast_llm.cpast_utils.scrape_models
+import cpast_llm.cpast_db.clex_cache as clex_cache
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.pydantic_v1 import SecretStr
-import cpast_utils.env_util
-import cpast_utils.models as CModels
-import cpast_lib
+import cpast_llm.cpast_utils.env_util
+import cpast_llm.cpast_utils.models as CModels
+import cpast_llm.cpast_lib
 
 load_dotenv()
 app = FastAPI()
 
-GOOGLE_API_KEY: SecretStr = cpast_utils.env_util.get_env_var('GOOGLE_API_KEY')
+GOOGLE_API_KEY: SecretStr = cpast_llm.cpast_utils.env_util.get_env_var('GOOGLE_API_KEY')
 
 origins = ['*']
 app.add_middleware(
@@ -38,7 +38,7 @@ async def test():
 async def llm_generate(request: CModels.LLMRequest) -> CModels.LLMResponse:
     clex: str = generate_response(request.input_format, request.constraints)
 
-    generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
+    generated_testcases: dict = cpast_llm.cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
         clex
     )
 
@@ -63,7 +63,7 @@ async def testcase_generate(
 ) -> CModels.TestcaseResponse:
     testcases: CModels.TestcaseResponse = CModels.TestcaseResponse(testcases=[])
     for _ in range(request.iterations):
-        generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
+        generated_testcases: dict = cpast_llm.cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
             request.clex
         )
         testcases.testcases.append(
@@ -78,14 +78,14 @@ async def testcase_generate(
 @app.get('/api/code/codechef/{problem_code}')
 async def get_codechef_problem(
     problem_code: str,
-) -> cpast_utils.scrape_models.ScrapeAPIResponse:
+) -> cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse:
     return codechef.CodeChef().get_problems_by_code(problem_code)
 
 
 @app.get('/api/code/codeforces/{contest_id}/{problem_code}')
 async def get_codeforces_problem(
     contest_id: str, problem_code: str
-) -> cpast_utils.scrape_models.ScrapeAPIResponse:
+) -> cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse:
     return codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
 
 
@@ -93,7 +93,7 @@ async def get_codeforces_problem(
 async def generate_testcase_codechef(
     problem_code: str,
 ) -> CModels.LLMResponse:
-    scrape_response: cpast_utils.scrape_models.ScrapeAPIResponse = (
+    scrape_response: cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse = (
         codechef.CodeChef().get_problems_by_code(problem_code)
     )
     clex: str = generate_response(
@@ -103,7 +103,7 @@ async def generate_testcase_codechef(
         problem_code,
     )
 
-    generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
+    generated_testcases: dict = cpast_llm.cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
         clex
     )
 
@@ -119,7 +119,7 @@ async def generate_testcase_codechef(
 async def generate_testcase_codeforces(
     contest_id: str, problem_code: str
 ) -> CModels.LLMResponse:
-    scrape_response: cpast_utils.scrape_models.ScrapeAPIResponse = (
+    scrape_response: cpast_llm.cpast_utils.scrape_models.ScrapeAPIResponse = (
         codeforces.CodeForces().get_problems_by_code(contest_id, problem_code)
     )
     clex: str = generate_response(
@@ -129,7 +129,7 @@ async def generate_testcase_codeforces(
         '{}/{}'.format(contest_id, problem_code),
     )
 
-    generated_testcases: dict = cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
+    generated_testcases: dict = cpast_llm.cpast_lib.generate(  # pyright: ignore[reportAttributeAccessIssue]
         clex
     )
 
@@ -153,7 +153,7 @@ def generate_response(
             return cached_clex
 
     chat_model = chat.ClexChatModel(
-        GOOGLE_API_KEY, cpast_utils.models.LANGCHAIN_LLM_CACHE_FILENAME
+        GOOGLE_API_KEY, cpast_llm.cpast_utils.models.LANGCHAIN_LLM_CACHE_FILENAME
     )
     prompt_content = prompt.ClexPromptGenerator()
     lang_specs = prompt_content.get_lang_specs(path='./clex.spec.md')

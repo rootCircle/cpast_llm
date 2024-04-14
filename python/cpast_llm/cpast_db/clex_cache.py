@@ -1,18 +1,27 @@
 import sqlite3
 import sys
-import cpast_utils.models
+import cpast_llm.cpast_utils.models
 
 
 def __sqlite3_run(*sqlite_query):
     """
-    The function will take multiple queries and
-    output the result in form of list
-    such that output of query1 lies at index 0 ,
-    Query2 at index 1 and so on.
+    Executes one or more SQLite queries and returns the results as a list.
+
+    Args:
+        *sqlite_query: Variable number of SQLite queries to be executed.
+
+    Returns:
+        A list containing the results of each query. The result of query1 is at index 0,
+        query2 at index 1, and so on.
+
+    Raises:
+        sqlite3.Error: If there is an error executing the queries.
     """
     output = []
     try:
-        sqlite_connection = sqlite3.connect(cpast_utils.models.CLEX_CACHE_DB_FILENAME)
+        sqlite_connection = sqlite3.connect(
+            cpast_llm.cpast_utils.models.CLEX_CACHE_DB_FILENAME
+        )
         cursor = sqlite_connection.cursor()
         for query in sqlite_query:
             if isinstance(query, (list, tuple)):
