@@ -1,6 +1,6 @@
 # clex LLM for cpast
 
-A W.I.P. implementation for LLM for clex, aimed to generate [clex](https://github.com/rootCircle/cpast/blob/main/clex.specs.md) from Human readable _Input Format_ and _Constraints_.
+A W.I.P. implementation for LLM for clex, aimed to generate [clex](https://github.com/rootCircle/cpast/blob/54e7f6820aa97f70c25047afd4ce14042b25838a/docs/clex/CLEX_LANG_SPECS.md) from Human readable _Input Format_ and _Constraints_.
 
 ## Install & setup
 
